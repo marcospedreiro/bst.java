@@ -7,8 +7,7 @@
  */
 
 /* TODO:
-    1) Add tests to main for dfs and bfs
-    2) Add method descriptions
+    1) Add method descriptions
   */
 
 import java.util.ArrayDeque;

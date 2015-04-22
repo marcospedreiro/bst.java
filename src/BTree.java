@@ -32,25 +32,80 @@ public class BTree {
         System.out.println("Height of Tree: " + B.getHeight());
         System.out.println("Number of nodes: " + B.getSize());
         //
-        System.out.println(B.toString());
+        System.out.println("Tree B: " + B.toString());
         System.out.println("Sum of elements: " + B.sumValues());
         //
         System.out.println("Search for 2: " + B.search(2));
         System.out.println("Search for 9: " + B.search(9));
         //
         B.remove(2);
-        System.out.println(B.toString());
+        System.out.println("Tree B: " + B.toString());
         System.out.println("Height of Tree: " + B.getHeight());
         System.out.println("Sum of elements: " + B.sumValues());
         System.out.println("Search for 2: " + B.search(2));
         System.out.println("Number of nodes: " + B.getSize());
         //
         B.remove(5);
-        System.out.println(B.toString());
+        System.out.println("Tree B: " + B.toString());
         System.out.println("Height of Tree: " + B.getHeight());
         System.out.println("Sum of elements: " + B.sumValues());
         System.out.println("Search for 5: " + B.search(5));
         System.out.println("Number of nodes: " + B.getSize());
+        //
+        BTree C = new BTree();
+        System.out.println("Remove from empty tree C");
+        C.remove(1);
+        System.out.println("Fill up C");
+        C.insert(6);
+        C.insert(5);
+        C.insert(8);
+        C.insert(7);
+        C.insert(2);
+        C.insert(3);
+        System.out.println("Tree C: " + C.toString());
+        System.out.println("Height of Tree: " + C.getHeight());
+        System.out.println("Sum of elements: " + C.sumValues());
+        System.out.println("Number of nodes: " + C.getSize());
+        //
+        System.out.println("bfs on 8: " + C.bfs(8));
+        System.out.println("bfs on 9: " + C.bfs(9));
+        //
+        System.out.println("Recursive inOrder dfs on 6: " + C.dfs_inOrder(6, false));
+        System.out.println("Iterative inOrder dfs on 6: " + C.dfs_inOrder(6, true));
+        System.out.println("Recursive inOrder dfs on 9: " + C.dfs_inOrder(9, false));
+        System.out.println("Iterative inOrder dfs on 9: " + C.dfs_inOrder(9, true));
+        //
+        System.out.println("Recursive postOrder dfs on 5: " + C.dfs_postOrder(5, false));
+        System.out.println("Iterative inOrder dfs on 2: " + C.dfs_postOrder(2, true));
+        System.out.println("Recursive postOrder dfs on 9: " + C.dfs_postOrder(9, false));
+        System.out.println("Iterative inOrder dfs on 9: " + C.dfs_postOrder(9, true));
+        //
+        System.out.println("Recursive preOrder dfs on 7: " + C.dfs_preOrder(7, false));
+        System.out.println("Iterative inOrder dfs on 3: " + C.dfs_preOrder(3, true));
+        System.out.println("Recursive preOrder dfs on 9: " + C.dfs_preOrder(9, false));
+        System.out.println("Iterative inOrder dfs on 9: " + C.dfs_preOrder(9, true));
+        //
+        System.out.println("Remove all nodes from B");
+        B.remove(7);
+        B.remove(4);
+        B.remove(6);
+        System.out.println("Tree B: " + B.toString());
+        System.out.println("Height of Tree: " + B.getHeight());
+        System.out.println("Sum of elements: " + B.sumValues());
+        System.out.println("Number of nodes: " + B.getSize());
+        //
+        System.out.println("Remove all nodes from C");
+        C.remove(6);
+        C.remove(5);
+        C.remove(8);
+        C.remove(7);
+        C.remove(2);
+        C.remove(3);
+        System.out.println("Tree C: " + C.toString());
+        System.out.println("Height of Tree: " + C.getHeight());
+        System.out.println("Sum of elements: " + C.sumValues());
+        System.out.println("Number of nodes: " + C.getSize());
+
     }
 
     public BTree() {
@@ -111,13 +166,15 @@ public class BTree {
     public void remove(double v) {
         if(root != null) {
             if(root.getValue() == v) {
-                Node tempRoot = new Node(0);
-                tempRoot.setLeft(root);
-                root.removeNode(v, tempRoot);
-                root = tempRoot.getLeft();
+                root.removeNode(v, null);
+                root = null;
             } else {
                 root.removeNode(v, null);
             }
+        }
+        if(size-1 < 0) {
+            size = 0;
+        } else {
             size -= 1;
         }
     }
@@ -143,6 +200,9 @@ public class BTree {
     }
 
     public String toString() {
+        if(root == null) {
+            return "[]";
+        }
         return stringHelper(root);
     }
 
@@ -297,7 +357,7 @@ public class BTree {
     }
 
 
-    public class Node {
+    private class Node {
         private double value;
         private Node left;
         private Node right;
@@ -339,7 +399,7 @@ public class BTree {
                     return false;
                 }
             } else if(v > this.value) {
-                if(this.right != null) {
+                if(this.right != null && this.left != null) {
                     return this.left.removeNode(v, this);
                 } else {
                     return false;
